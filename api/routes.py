@@ -54,7 +54,7 @@ def signup():
     db.session.add(new_user)
     db.session.commit()
 
-    return jsonify({"status": 200, "message": "The user has been created."})
+    return jsonify({"status": 201, "message": "The user has been created."})
 
 
 

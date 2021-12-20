@@ -1,0 +1,533 @@
+{
+	"info": {
+		"_postman_id": "069e0c81-acd1-4384-9c2d-002417a28f1c",
+		"name": "Unit test for book my show",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Reservation of tickets fail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Reservation ticket fails',function(){\r",
+							"pm.response.to.have.status(200);\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.message).to.eql('token is missing.');\r",
+							"    pm.expect(responseJson.status).to.eql('400');});\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiI2ZjNmMjc2MC1jMzdjLTQ3YWMtOTAzNS0wMTczZjVjNzAyYWUiLCJleHAiOjE2Mzk5ODY0OTN9.Yp4KzL0A6lC1EHhhvxLAF0zATCRq_bO-XHZ5_eH7LRI",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"show\": \"show1\",\r\n    \"seats\": {\r\n        \"B\":[11,12],\r\n        \"C\":[13,14]\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/screens/sfs/reserve",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"screens",
+						"sfs",
+						"reserve"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "unreserved",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reservation of tickets success.",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Reservation ticket success',function(){\r",
+							"pm.response.to.have.status(200);\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.message).to.not.eql('token is missing.');});\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"show\": \"show1\",\r\n    \"seats\": {\r\n        \"B\":[11,12],\r\n        \"C\":[13,14]\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/screens/sfs/reserve",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"screens",
+						"sfs",
+						"reserve"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "unreserved",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let date=Date.now();\r",
+							"let email = 'pardha.' + date + '@something.com';\r",
+							"pm.environment.set('username',email);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Create user',function(){\r",
+							"pm.response.to.have.status(200);\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.message).to.eql('The user has been created.');\r",
+							"    pm.expect(responseJson.status).to.eql(201);});\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"pardha\",\r\n    \"email\":\"{{username}}\",\r\n    \"password\":\"tefghjst\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/signup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Create user',function(){\r",
+							"pm.response.to.have.status(200);\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"const responseJson = pm.response.json();\r",
+							"pm.environment.set('token',responseJson.token); \r",
+							"return 'token' in responseJson;\r",
+							"});\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "tefghjst",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"pardha\",\r\n    \"email\":\"pardha@vbn.com\",\r\n    \"password\":\"tefghjst\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all movies",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Check movies',function(){\r",
+							"pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"sssfdsadaaad\",\r\n    \"shows\": {\r\n        \"show1\": {\r\n            \"cinema\": \"julay\",\r\n            \"seatInfo\": {\r\n                \"A\": {\r\n                    \"numberOfSeats\": 10,\r\n                    \"aisleSeats\": [\r\n                        0,\r\n                        5,\r\n                        6,\r\n                        9\r\n                    ]\r\n                },\r\n                \"B\": {\r\n                    \"numberOfSeats\": 15,\r\n                    \"aisleSeats\": [\r\n                        0,\r\n                        7,\r\n                        8,\r\n                        14\r\n                    ]\r\n                },\r\n                \"C\": {\r\n                    \"numberOfSeats\": 20,\r\n                    \"aisleSeats\": [\r\n                        0,\r\n                        9,\r\n                        10,\r\n                        19\r\n                    ]\r\n                }\r\n            }\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/screens/movies",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"screens",
+						"movies"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "julay",
+							"disabled": true
+						},
+						{
+							"key": "status",
+							"value": "unreserved",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all movies by movie name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Check movies with movie name',function(){\r",
+							"pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"sssfdsadaaad\",\r\n    \"shows\": {\r\n        \"show1\": {\r\n            \"cinema\": \"julay\",\r\n            \"seatInfo\": {\r\n                \"A\": {\r\n                    \"numberOfSeats\": 10,\r\n                    \"aisleSeats\": [\r\n                        0,\r\n                        5,\r\n                        6,\r\n                        9\r\n                    ]\r\n                },\r\n                \"B\": {\r\n                    \"numberOfSeats\": 15,\r\n                    \"aisleSeats\": [\r\n                        0,\r\n                        7,\r\n                        8,\r\n                        14\r\n                    ]\r\n                },\r\n                \"C\": {\r\n                    \"numberOfSeats\": 20,\r\n                    \"aisleSeats\": [\r\n                        0,\r\n                        9,\r\n                        10,\r\n                        19\r\n                    ]\r\n                }\r\n            }\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/screens/movies?name=julay",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"screens",
+						"movies"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "julay"
+						},
+						{
+							"key": "status",
+							"value": "unreserved",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create screen with shows",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Create screens',function(){\r",
+							"pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"rain\",\r\n    \"shows\": {\r\n        \"show1\": {\r\n            \"cinema\": \"jalsa\",\r\n            \"seatInfo\": {\r\n                \"A\": {\r\n                    \"numberOfSeats\": 10,\r\n                    \"aisleSeats\": [\r\n                        0,\r\n                        5,\r\n                        6,\r\n                        9\r\n                    ]\r\n                },\r\n                \"B\": {\r\n                    \"numberOfSeats\": 15,\r\n                    \"aisleSeats\": [\r\n                        0,\r\n                        7,\r\n                        8,\r\n                        14\r\n                    ]\r\n                },\r\n                \"C\": {\r\n                    \"numberOfSeats\": 20,\r\n                    \"aisleSeats\": [\r\n                        0,\r\n                        9,\r\n                        10,\r\n                        19\r\n                    ]\r\n                }\r\n            }\r\n        },\r\n        \"show2\": {\r\n            \"cinema\": \"jalsa\",\r\n            \"seatInfo\": {\r\n                \"A\": {\r\n                    \"numberOfSeats\": 10,\r\n                    \"aisleSeats\": [\r\n                        0,\r\n                        5,\r\n                        6,\r\n                        9\r\n                    ]\r\n                },\r\n                \"B\": {\r\n                    \"numberOfSeats\": 15,\r\n                    \"aisleSeats\": [\r\n                        0,\r\n                        7,\r\n                        8,\r\n                        14\r\n                    ]\r\n                },\r\n                \"C\": {\r\n                    \"numberOfSeats\": 20,\r\n                    \"aisleSeats\": [\r\n                        0,\r\n                        9,\r\n                        10,\r\n                        19\r\n                    ]\r\n                }\r\n            }\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/screens",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"screens"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get ticket availability for a particular seat",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Check seats for particular row',function(){\r",
+							"pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"sssfdsadaaad\",\r\n    \"shows\": {\r\n        \"show1\": {\r\n            \"cinema\": \"julay\",\r\n            \"seatInfo\": {\r\n                \"A\": {\r\n                    \"numberOfSeats\": 10,\r\n                    \"aisleSeats\": [\r\n                        0,\r\n                        5,\r\n                        6,\r\n                        9\r\n                    ]\r\n                },\r\n                \"B\": {\r\n                    \"numberOfSeats\": 15,\r\n                    \"aisleSeats\": [\r\n                        0,\r\n                        7,\r\n                        8,\r\n                        14\r\n                    ]\r\n                },\r\n                \"C\": {\r\n                    \"numberOfSeats\": 20,\r\n                    \"aisleSeats\": [\r\n                        0,\r\n                        9,\r\n                        10,\r\n                        19\r\n                    ]\r\n                }\r\n            }\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/screens/sfs/seats?show=show1&choice=B3&numSeats=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"screens",
+						"sfs",
+						"seats"
+					],
+					"query": [
+						{
+							"key": "show",
+							"value": "show1"
+						},
+						{
+							"key": "choice",
+							"value": "B3"
+						},
+						{
+							"key": "numSeats",
+							"value": "1"
+						},
+						{
+							"key": "status",
+							"value": "unreserved",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all unreserved tickets for a particular screen.",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Check the seats for a particular movie which are unreserved',function(){\r",
+							"pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"sssfdsadaaad\",\r\n    \"shows\": {\r\n        \"show1\": {\r\n            \"cinema\": \"julay\",\r\n            \"seatInfo\": {\r\n                \"A\": {\r\n                    \"numberOfSeats\": 10,\r\n                    \"aisleSeats\": [\r\n                        0,\r\n                        5,\r\n                        6,\r\n                        9\r\n                    ]\r\n                },\r\n                \"B\": {\r\n                    \"numberOfSeats\": 15,\r\n                    \"aisleSeats\": [\r\n                        0,\r\n                        7,\r\n                        8,\r\n                        14\r\n                    ]\r\n                },\r\n                \"C\": {\r\n                    \"numberOfSeats\": 20,\r\n                    \"aisleSeats\": [\r\n                        0,\r\n                        9,\r\n                        10,\r\n                        19\r\n                    ]\r\n                }\r\n            }\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/screens/sfs/seats?status=unreserved",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"screens",
+						"sfs",
+						"seats"
+					],
+					"query": [
+						{
+							"key": "show",
+							"value": "show1",
+							"disabled": true
+						},
+						{
+							"key": "choice",
+							"value": "B3",
+							"disabled": true
+						},
+						{
+							"key": "numSeats",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "status",
+							"value": "unreserved"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -42,7 +42,7 @@ def signup():
     user_exists = User.query.filter_by(email=email).first()
 
     if(user_exists):
-        return jsonify({"status": 202, "message": "There is alredy a user with the same email id please login"})
+        return jsonify({"status": 202, "message": "There is alredy a user with the same email id please login."})
 
     password=data['password']
 
@@ -112,7 +112,7 @@ def screens():
         shows = request.json['shows']
 
     except:
-        return jsonify({"status": 400, "message": "Bad Request"})
+        return jsonify({"status": 400, "message": "Bad Request."})
 
     screen_exist = Screen.query.filter_by(name=name).first()
 
@@ -122,7 +122,7 @@ def screens():
         db.session.commit()
 
     else:
-        return jsonify({"status": 202, "message": "The screen name is already added use another"})
+        return jsonify({"status": 202, "message": "The screen name is already added use another."})
 
     screen = Screen.query.filter_by(name=name).first()
 
@@ -162,7 +162,7 @@ def screens():
 
     db.session.commit()
 
-    return jsonify({"status": 200, "message": "Screen details successfully added"})
+    return jsonify({"status": 200, "message": "Screen details successfully added."})
 
 
 
@@ -181,7 +181,7 @@ def reserve_seats(current_user,screen_name):
         show = request.json['show']
 
     except :
-        return jsonify({"status": 400, "message": "Kindly add the seat numbers and show in body"})
+        return jsonify({"status": 400, "message": "Kindly add the seat numbers and show in body."})
 
     # Check whether the required seats are available or not
     for key, value in seats.items():
@@ -206,7 +206,7 @@ def reserve_seats(current_user,screen_name):
         row.reserved_seats = reserved_seats
         db.session.commit()
 
-    return jsonify({"status": 200, "message": "Seats successfully reserved"})
+    return jsonify({"status": 200, "message": "Seats successfully reserved."})
 
 
 # Route for viewing information of available tickets at a given position
@@ -232,14 +232,14 @@ def available_seats(screen_name):
             show = request.args.get('show')
 
         except:
-            return jsonify({"message": "Bad request", "status": 400})
+            return jsonify({"message": "Bad request.", "status": 400})
 
         if num_seats and choice and show:
             try:
                 num_seats = int(num_seats)
 
             except:
-                return jsonify({"status": 400, "message": "Bad Request"})
+                return jsonify({"status": 400, "message": "Bad Request."})
 
             row_num = choice[0]
             seat_num = choice[1:]
@@ -261,7 +261,7 @@ def available_seats(screen_name):
             rem_seats = [x for x in list(range(0, row.number_of_seats)) if x not in reserved_seats]
 
             if int(seat_num) in reserved_seats:
-                return jsonify({"message": "Required seats not available"})
+                return jsonify({"message": "Required seats not available!"})
 
             lst = []
             i = 0
@@ -390,5 +390,5 @@ def movies():
             j+=1
 
         result["cinemas"]=data
-        
+
         return jsonify(result)

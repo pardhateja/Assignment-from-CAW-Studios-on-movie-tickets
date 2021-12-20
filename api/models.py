@@ -14,18 +14,21 @@ class Row(db.Model):
     aisle_seats = db.Column(db.String)
     reserved_seats = db.Column(db.String)
 
-
-
+# DB model for relation (id, name)
+# This relation stores the details of each unique cinema.
 class Cinema(db.Model):
     id=db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True)
 
-
-# id is a unique id made of "screen_id + show_id"
+# DB model for relation (id, cinema_id)
+# This relation stores the details of each cinema with the show in which it is been played.
 class Cinema_Show(db.Model):
     id=db.Column(db.String(10), primary_key=True)
     cinema_id=db.Column(db.Integer)
 
+# DB model for relation (id, public_id, name, email, password)
+# This relation stores the details of each user who has signup his account.
+# public_id is a unique id made of uuid4 for maintaining unique values.
 class User(db.Model):
     id=db.Column(db.Integer, primary_key=True)
     public_id=db.Column(db.String(50),unique=True)
